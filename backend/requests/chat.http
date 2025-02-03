@@ -1,0 +1,14 @@
+### Enviar un mensaje a la IA (ASEGURAR AUTENTICACIÓN y USAR UN TOKEN VÁLIDO)
+POST http://localhost:3000/api/chat
+Content-Type: application/json
+Authorization: Bearer TOKEN_AQUI
+
+{
+    "model": "deepseek-r1:14b",
+    "messages": [
+        {
+            "role": "user",
+            "content": "¿Cuál es el significado de la vida?"
+        }
+    ]
+}

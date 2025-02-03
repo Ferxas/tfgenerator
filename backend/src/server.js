@@ -1,44 +1,21 @@
-import express from "express";
-import fetch from "node-fetch";
-import cors from "cors";
-import dotenv from "dotenv";
+import app from './app.js';
+import { connectMongoDB, prisma } from './config/database.js';
+import { config } from './config/env.js';
 
-dotenv.config();
 
-const app = express();
-app.use(express.json());
-app.use(cors());
-
-app.post("/api/chat", async (req, res) => {
+const startServer = async() => {
     try {
-        const response = await fetch("http://localhost:11434/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(req.body),
-        });
+        await connectMongoDB();
+        await prisma.$connect();
+        console.log("✅ Conectado a PostgreSQL");
 
-        if (!response.ok) {
-            return res.status(response.status).json({ error: "Error al conectar con Ollama" });
-        }
-
-        res.setHeader("Content-Type", "text/event-stream");
-        res.setHeader("Cache-Control", "no-cache");
-        res.setHeader("Connection", "keep-alive");
-
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-
-        while (true) {
-            const { value, done } = await reader.read();
-            if (done) break;
-            res.write(decoder.decode(value, { stream: true }));
-        }
-
-        res.end();
+        app.listen(config.PORT, () => {
+            console.log(`🚀 Servidor corriendo en http://localhost:${config.PORT}`);
+        })
     } catch (error) {
-        res.status(500).json({ error: "Error en el servidor", details: error.message });
+        console.error("❌ Error iniciando servidor: ", error);
+        process.exit(1);
     }
-});
+}
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));
+startServer();

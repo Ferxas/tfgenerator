@@ -1,0 +1,3 @@
+### OBTENER USUARIOS
+
+GET http://localhost:3000/api/users

@@ -11,10 +11,15 @@
   "license": "ISC",
   "description": "proyecto para realizar tareas y análisis más correcciones",
   "dependencies": {
+    "@prisma/client": "^6.3.0",
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.6",
     "node-fetch": "^3.3.2",
+    "prisma": "^6.3.0",
     "tfgenius": "file:"
   },
   "devDependencies": {
