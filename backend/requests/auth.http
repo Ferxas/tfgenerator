@@ -1,0 +1,22 @@
+### Registro de usuario
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+    "name": "Christian",
+    "email": "test@email.com",
+    "password": "123456"
+}
+
+### INICIO DE SESIÓN
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "test@email.com",
+    "password": "123456"
+}
+
+### RUTAS PROTEGIDAS - REEMPLAZAR TOKEN
+GET http://localhost:3000/api/protected-route
+Authorization: Bearer TOKEN_AQUI
