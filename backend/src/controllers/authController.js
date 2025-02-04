@@ -25,22 +25,24 @@ export const registerUser = async (req, res) => {
     }
 }
 
+    
 export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
 
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user) {
-            return res.status(500).json({ error: "Usuario no encontado" });
+            return res.status(400).json({ error: "Usuario no encontrado" });
         }
 
         const isValid = await bcrypt.compare(password, user.password);
-
         if (!isValid) {
-            return res.status(400).json({ error: "Contraseña incorrecta" })
+            return res.status(400).json({ error: "Contraseña incorrecta" });
         }
 
-        const token = jwt.sign({ id: user.id }, config.JWT_SECRET, { expiresIn: "7d" });
+        const token = jwt.sign({ userId: user.id }, config.JWT_SECRET, { expiresIn: "7d" });
+
+        console.log("🔹 Token generado:", token); // Verifica si el token contiene userId
 
         res.json({ token, user: { id: user.id, name: user.name, email: user.email } });
     } catch (error) {

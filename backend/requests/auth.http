@@ -3,8 +3,8 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-    "name": "Christian",
-    "email": "test@email.com",
+    "name": "Fernando",
+    "email": "fernando@email.com",
     "password": "123456"
 }
 
@@ -13,10 +13,10 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "test@email.com",
+    "email": "fernando@email.com",
     "password": "123456"
 }
 
 ### RUTAS PROTEGIDAS - REEMPLAZAR TOKEN
-GET http://localhost:3000/api/protected-route
-Authorization: Bearer TOKEN_AQUI
+GET http://localhost:3000/api/users/profile HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwZGE5N2Q2NS1iZmJjLTQ4NGYtYmY4OC1jNGRiYzFiNDMzM2EiLCJpYXQiOjE3Mzg3MDM4NzIsImV4cCI6MTczOTMwODY3Mn0.Nc5afB77XgzoILr6i-mKR9sdDTwKSXcrYSPhtY89y14
