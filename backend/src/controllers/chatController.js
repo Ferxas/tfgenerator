@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { } from '../config/env.js';
+import { config } from '../config/env.js';
 import Chat from '../models/mongodb/chatModel.js';
 
 export const ChatWithAI = async (req, res) => {
@@ -17,28 +17,28 @@ export const ChatWithAI = async (req, res) => {
             return res.status(response.status).json({ Error: "Error al conectar con Ollama API" });
         }
 
+        const responseData = await response.text();
+
         res.setHeader("Content-Type", "text/event-stream");
         res.setHeader("Cache-Control", "no-cache");
         res.setHeader("Connection", "keep-alive");
 
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let fullResponse = "";
+        res.send(responseData)
 
-        while (true) {
-            const { value, done } = await reader.read();
-            if (done) break;
-            const chunk = decoder.decode(value, { stream: true });
-            fullResponse += chunk;
-            res.write(chunk);
-        }
+        // while (true) {
+        //     const { value, done } = await reader.read();
+        //     if (done) break;
+        //     const chunk = decoder.decode(value, { stream: true });
+        //     fullResponse += chunk;
+        //     res.write(chunk);
+        // }
 
-        res.end();
+        // res.end();
 
         await Chat.create({
             userId,
             messages,
-            response: fullResponse,
+            response: responseData,
         });
     } catch (error) {
         res.status(500).json({ error: "Error en el chat:", details: error.message });
