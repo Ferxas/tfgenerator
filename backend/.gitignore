@@ -68,3 +68,6 @@ public/
 
 # TernJS port file
 .tern-port
+
+# Service account JSON File
+src/config/firebase.json
