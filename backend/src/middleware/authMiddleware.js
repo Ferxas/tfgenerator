@@ -1,7 +1,6 @@
-import jwt from "jsonwebtoken";
-import { config } from "../config/env.js";
+import { adminAuth } from '../config/firebaseAdmin.js';
 
-export const authMiddleware = (req, res, next) => {
+export const authMiddleware = async (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
@@ -9,11 +8,12 @@ export const authMiddleware = (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token, config.JWT_SECRET);
-        console.log("🔹 Token decodificado:", decoded); // Verificar que contenga userId
-        req.user = { userId: decoded.userId }; // Asegurar que el campo es userId
+        const decodedToken = await adminAuth.verifyIdToken(token);
+        console.log("🔹 Token decodificado:", decodedToken);
+        req.user = decodedToken;
         next();
     } catch (error) {
-        res.status(401).json({ error: "Token inválido" });
+        res.status(401).json({ error: "Token inválido", details: error.message });
+        console.error("Hubo un error:", error);
     }
 };

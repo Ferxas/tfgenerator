@@ -1,11 +1,12 @@
+import { db } from '../config/firebase.js';
+import { collection, addDoc } from 'firebase/firestore';
 import fetch from 'node-fetch';
 import { config } from '../config/env.js';
-import Chat from '../models/mongodb/chatModel.js';
 
 export const ChatWithAI = async (req, res) => {
     try {
         const { model, messages } = req.body;
-        const userId = req.user.userId;
+        const userId = req.user.uid;
 
         const response = await fetch(config.OLLAMA_API, {
             method: "POST",
@@ -19,28 +20,19 @@ export const ChatWithAI = async (req, res) => {
 
         const responseData = await response.text();
 
-        res.setHeader("Content-Type", "text/event-stream");
-        res.setHeader("Cache-Control", "no-cache");
-        res.setHeader("Connection", "keep-alive");
-
-        res.send(responseData)
-
-        // while (true) {
-        //     const { value, done } = await reader.read();
-        //     if (done) break;
-        //     const chunk = decoder.decode(value, { stream: true });
-        //     fullResponse += chunk;
-        //     res.write(chunk);
-        // }
-
-        // res.end();
-
-        await Chat.create({
+        await addDoc(collection(db, "chats"), {
             userId,
             messages,
             response: responseData,
+            timestamp: new Date()
         });
+
+        res.setHeader("Content-Type", "application/json");
+        res.send({ response: responseData });
+
     } catch (error) {
-        res.status(500).json({ error: "Error en el chat:", details: error.message });
+        if (!res.headersSent) {
+            res.status(500).json({ error: "Error en el chat:", details: error.message });
+        }
     }
 };
