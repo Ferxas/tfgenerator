@@ -71,3 +71,9 @@ public/
 
 # Service account JSON File
 src/config/firebase.json
+
+# Uploaded files
+src/uploads/*
+
+# Testing
+test/*
